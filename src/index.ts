@@ -2,19 +2,22 @@ import cron from "node-cron"
 import {timesheetCron} from "./helper"
 import dotenv from 'dotenv';
 import { connectDB } from './db/config';
-import { app } from './app';
+import { mainRouter } from './app';
 import adminMailGen from './utils/mail/admin/generation';
 import userMailGen from './utils/mail/user/generation/index';
 import userWhatsappGen from './utils/whatsapp/generation';
 import scheduleReminderCronJob from './utils/googleChat/cron';
+import express from "express"
+const app = express()
 dotenv.config();
 
 connectDB().then(() => {
     
-    app.on("error", (error) => {
-        console.log("error in listen", error)
-        throw error
-    })
+  app.use(mainRouter)
+    // app.on("error", (error) => {
+    //     console.log("error in listen", error)
+    //     throw error
+    // })
     app.listen(process.env.PORT, () => {
         console.log(`Server is live at ${process.env.PORT}`)
     })
